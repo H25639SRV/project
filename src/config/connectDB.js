@@ -1,4 +1,5 @@
 const { Sequelize } = require("sequelize");
+module.exports = config
 
 // Option 3: Passing parameters separately (other dialects)
 const sequelize = new Sequelize("jwt", "root", null, {
