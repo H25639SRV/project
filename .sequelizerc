@@ -1,4 +1,5 @@
 const path = require("path");
+const config = require ("config")
 
 module.exports = {
   "config": path.resolve("./src/config", "config.json"),
@@ -6,4 +7,3 @@ module.exports = {
   "models-path": path.resolve("./src/", "models"),
   "seeders-path": path.resolve("./src/", "seeders"),
 };
-module.exports = config
