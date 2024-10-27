@@ -19,6 +19,7 @@ const initWebRoutes = (app) => {
   //rest api
   // get - r, post - c, post - u, delete - d
   router.get("/api/test-api", apiController.testApi);
+
   return app.use("/", router);
 };
 
