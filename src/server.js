@@ -19,7 +19,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //initWebRoutes
 initWebRoutes(app);
 
-const PORT = 8080;
+initWebRoutes(app);
+const PORT = 8081;
 app.listen(PORT, () => {
   console.log(">>> JWT Backend is running on the port = " + PORT);
 });
