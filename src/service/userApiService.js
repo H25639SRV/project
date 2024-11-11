@@ -35,6 +35,8 @@ const getUserWithPagination = async (page, limit) => {
     const { count, rows } = await db.User.findAndCountAll({
       offset: offset,
       limit: limit,
+      attributes: ["id", "username", "email", "phone", "sex"],
+      include: { model: db.Group, attributes: ["name", "description"] },
     });
 
     let totalPages = Math.ceil(count / limit);
@@ -61,7 +63,12 @@ const getUserWithPagination = async (page, limit) => {
 
 const createNewUser = async (data) => {
   try {
-    await db.User.create({});
+    await db.User.create(data);
+    return {
+      EM: "create user successfully",
+      EC: 0,
+      DT: [],
+    };
   } catch (e) {
     console.log(e);
   }
@@ -85,11 +92,30 @@ const updateUser = async (data) => {
 
 const deleteUser = async (id) => {
   try {
-    await db.User.delete({
+    let user = await db.User.findOne({
       where: { id: id },
     });
+    if (user) {
+      await user.destroy();
+      return {
+        EM: "delete user successfully",
+        EC: 0,
+        DT: [],
+      };
+    } else {
+      return {
+        EM: "user not found",
+        EC: 2,
+        DT: [],
+      };
+    }
   } catch (e) {
     console.log(e);
+    return {
+      EM: "error from service",
+      EC: 1,
+      DT: [],
+    };
   }
 };
 
