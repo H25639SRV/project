@@ -44,14 +44,12 @@ const getUserList = async () => {
     raw: true,
     nest: true,
   });
-  console.log(">>>new user: ", newUser);
 
   let newRole = await db.Role.findAll({
     include: { model: db.Group, where: { id: 1 } },
     raw: true,
     nest: true,
   });
-  console.log(">>>new roles: ", newRole);
 
   let users = [];
   users = await db.User.findAll();

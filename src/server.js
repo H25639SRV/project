@@ -1,10 +1,10 @@
+require("dotenv").config();
 import express from "express";
 import configViewEngine from "./config/viewEngine";
 import initWebRoutes from "./routes/web";
 import initApiRoutes from "./routes/api";
 import configCors from "./config/cors";
-
-require("dotenv").config();
+import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 // import connection from "./config/connectDB.js";
 
@@ -20,6 +20,9 @@ configViewEngine(app);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//config cookie-parser
+app.use(cookieParser());
+
 //test connection
 // connection();
 
@@ -28,6 +31,10 @@ initWebRoutes(app);
 initApiRoutes(app);
 
 const PORT = 8080;
+
+app.use((req, res) => {
+  return res.send("404 not found");
+});
 
 app.listen(PORT, () => {
   console.log(">>> JWT Backend is running on the port = " + PORT);

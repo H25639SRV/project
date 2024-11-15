@@ -5,6 +5,8 @@ const handleHelloWorld = (req, res) => {
 };
 
 const handleUserPage = async (req, res) => {
+  console.log("cookies: ", req.cookies);
+
   // model => get data from database
   let userList = await userService.getUserList();
   return res.render("user.ejs", { userList });

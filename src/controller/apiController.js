@@ -10,6 +10,12 @@ const testApi = (req, res) => {
 const handleLogin = async (req, res) => {
   try {
     let data = await loginRegisterService.handleUserLogin(req.body);
+    //set cookie
+    res.cookie("jwt", data.DT.access_token, {
+      httpOnly: true,
+      maxAge: 3600000,
+    });
+
     return res.status(200).json({
       EM: data.EM, //error message
       EC: data.EC, //error code
