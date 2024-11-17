@@ -2,7 +2,7 @@ require("dotenv").config();
 
 import jwt from "jsonwebtoken";
 
-const nonSecurePaths = ["/", "/register", "/login"];
+const nonSecurePaths = ["/logout", "/register", "/login"];
 
 const createJWT = (payload) => {
   let key = process.env.JWT_SECRET;
@@ -27,13 +27,26 @@ const verifyToken = (token) => {
   return decoded;
 };
 
+const extractToken = (req) => {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(" ")[0] === "Bearer"
+  ) {
+    return req.headers.authorization.split(" ")[1];
+  }
+  return null;
+};
+
 const checkUserJWT = (req, res, next) => {
   if (nonSecurePaths.includes(req.path)) {
     return next();
   }
   let cookies = req.cookies;
-  if (cookies && cookies.jwt) {
-    let token = cookies.jwt;
+  let tokenFromHeader = extractToken(req);
+
+  if ((cookies && cookies.jwt) || tokenFromHeader) {
+    let token = cookies && cookies.jwt ? cookies.jwt : tokenFromHeader;
+    console.log("cookies", cookies);
     let decoded = verifyToken(token);
     if (decoded) {
       req.user = decoded;
@@ -57,9 +70,8 @@ const checkUserJWT = (req, res, next) => {
 };
 
 const checkUserPermission = (req, res, next) => {
-  if (nonSecurePaths.includes(req.path) || req.path === "/account") {
+  if (nonSecurePaths.includes(req.path) || req.path === "/account")
     return next();
-  }
   if (req.user) {
     let email = req.user.email;
     let roles = req.user.groupWithRoles.Roles;
@@ -67,7 +79,7 @@ const checkUserPermission = (req, res, next) => {
     if (!roles || roles.length === 0) {
       return res.status(403).json({
         EM: "u dont have permission to access this resource",
-        EC: "-1",
+        EC: -1,
         DT: "",
       });
     }
@@ -77,14 +89,14 @@ const checkUserPermission = (req, res, next) => {
     } else {
       return res.status(403).json({
         EM: "u dont have permission to access this resource",
-        EC: "-1",
+        EC: -1,
         DT: "",
       });
     }
   } else {
     return res.status(401).json({
       EM: "Unauthorized",
-      EC: "-1",
+      EC: -1,
       DT: "",
     });
   }
