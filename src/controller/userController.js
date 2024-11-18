@@ -11,6 +11,13 @@ const readFunc = async (req, res) => {
         EC: data.EC, //error code
         DT: data.DT, //data
       });
+    } else {
+      let data = await userApiService.getAllUsers();
+      return res.status(200).json({
+        EM: data.EM, //error message
+        EC: data.EC, //error code
+        DT: data.DT, //data
+      });
     }
   } catch (e) {
     console.log(e);
